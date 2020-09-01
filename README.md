@@ -86,8 +86,8 @@ module "mysql_server" {
 
 ## Quick start
 
-1.Install [Terraform](https://www.terraform.io/).
-2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest) 
+1.Install [Terraform](https://www.terraform.io/).\
+2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest)\
 
 
 ```
