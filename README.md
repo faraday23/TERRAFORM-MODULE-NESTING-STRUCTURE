@@ -87,12 +87,16 @@ module "mysql_server" {
 ## Quick start
 
 1.Install [Terraform](https://www.terraform.io/).\
-2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest)\
+2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest)
 
 
 ```
-export TF_VAR_subscription_id="11111111-2222-3333-4444-111111111111"
-export TF_VAR_tenant_id="11111111-2222-3333-4444-222222222222"
+# Login with the Azure CLI/bash terminal/powershell by running
+az login
+# Verify access by running
+az account show --output jsonc
+# confirm you are running required/pinned version of terraform
+terraform version
 ```
 
 Deploy the code:
@@ -100,7 +104,7 @@ Deploy the code:
 ```
 terraform init
 terraform plan -out azure-mysql-01.tfplan
-terraform apply
+terraform apply azure-mysql-01.tfplan
 ```
 
 
