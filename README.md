@@ -11,7 +11,7 @@ For more info, please see https://docs.microsoft.com/en-us/azure/mysql/.
 # Configure Providers
 provider "azurerm" {
   version = ">=2.0.0"
-  subscription_id = "b0837458-adf3-41b0-a8fb-c16f9719627d"
+  subscription_id = "0000000-0000-0000-0000-0000000"
   features {}
 }
 
@@ -94,7 +94,7 @@ The following arguments are supported.
 
 ## Quick start
 
-1.Install [Terraform](https://www.terraform.io/).
+1.Install [Terraform](https://www.terraform.io/).`
 2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest) 
 
 
