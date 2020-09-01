@@ -21,7 +21,7 @@ provider "azurerm" {
 
 module "subscription" {
   source = "github.com/Azure-Terraform/terraform-azurerm-subscription-data.git?ref=v1.0.0"
-  subscription_id = "b0837458-adf3-41b0-a8fb-c16f9719627d"
+  subscription_id = "0000000-0000-0000-0000-0000000"
 }
 
 module "rules" {
