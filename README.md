@@ -85,17 +85,14 @@ module "mysql_server" {
 
 ## Quick start
 
-#1.Install [Terraform](https://www.terraform.io/).
-#2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest) 
+1.Install [Terraform](https://www.terraform.io/).
+2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest) 
 
 
 ```
 export TF_VAR_subscription_id="11111111-2222-3333-4444-111111111111"
 export TF_VAR_tenant_id="11111111-2222-3333-4444-222222222222"
 ```
-
-Open `terraform.tfvars`, fill in the name of your 'subscription name', 'location', and
-'app_name' to be used with this MySQL Database.
 
 Deploy the code:
 
