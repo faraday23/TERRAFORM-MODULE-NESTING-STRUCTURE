@@ -97,7 +97,7 @@ az login
 # Verify access by running
 az account show --output jsonc
 
-# confirm you are running required/pinned version of terraform
+# Confirm you are running required/pinned version of terraform
 terraform version
 ```
 
