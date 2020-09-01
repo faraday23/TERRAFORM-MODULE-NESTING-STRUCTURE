@@ -1,29 +1,118 @@
 # BEST EXAMPLE OF TERRAFORM MODULE NESTING STRUCTURE
 
-# Host Network for Applications
+# Azure Database for MySQL Server
 
-This example creates a "host" network that can be shared across multiple projects, meant for multiple teams within an
-organization to run their services within with limited network configuration privileges. This network is appropriate to
-run a single environment- `production`, `staging`, etc.
+This repo contains an example Terraform configuration that deploys a MySQL database using Azure.
+For more info, please see https://docs.microsoft.com/en-us/azure/mysql/.
 
-This example showcases a service project being created and used to run a service team's application. While it's present
-in a single Terraform configuration (`.tf`) file, two distinct provider aliases are used to showcase the different
-credentials the network operators and service teams use.
+## Example Usage
 
-## Limitations
+```hcl
+# Configure Providers
+provider "azurerm" {
+  version = ">=2.0.0"
+  subscription_id = "b0837458-adf3-41b0-a8fb-c16f9719627d"
+  features {}
+}
 
-Every network within the host project will be a host network, and the host project cannot be a service project (eg:
-share a network with another host project).
+##
+# Pre-Build Modules 
+##
 
-While networks on Google Cloud Platform (GCP) are global, most resources that reside inside a VPC network live inside a
-regional subnetwork. This example showcases an application running within a single region.
+module "subscription" {
+  source = "github.com/Azure-Terraform/terraform-azurerm-subscription-data.git?ref=v1.0.0"
+  subscription_id = "b0837458-adf3-41b0-a8fb-c16f9719627d"
+}
 
-## How do you run these examples?
+module "rules" {
+  source = "git@github.com:openrba/python-azure-naming.git?ref=tf"
+}
 
-1. Install [Terraform](https://www.terraform.io/).
-1. Make sure you have Python installed (version 2.x) and in your `PATH`.
-1. Open `variables.tf`,  and fill in any required variables that don't have a
-default.
-1. Run `terraform get`.
-1. Run `terraform plan`.
-1. If the plan looks good, run `terraform apply`.
+# For tags and info see https://github.com/Azure-Terraform/terraform-azurerm-metadata and for naming convention https://github.com/openrba/python-azure-naming 
+module "metadata"{
+  source = "github.com/Azure-Terraform/terraform-azurerm-metadata.git?ref=v1.0.0"
+
+  naming_rules = module.rules.yaml
+  
+  market              = "us"
+  location            = "useast1"
+  sre_team            = "alpha"
+  environment         = "sandbox"
+  project             = "mysqlDB"
+  business_unit       = "iog"
+  product_group       = "tfe"
+  product_name        = "mysqlsrvr"
+  subscription_id     = module.subscription.output.subscription_id
+  subscription_type   = "nonprod"
+  resource_group_type = "app"
+}
+
+module "resource_group" {
+  source = "github.com/Azure-Terraform/terraform-azurerm-resource-group.git?ref=v1.0.0"
+  
+  location = module.metadata.location
+  names    = module.metadata.names
+  tags     = module.metadata.tags
+}
+
+# mysql-server module
+module "mysql_server" {
+  source = "../mysql-module-test/mysql_server"
+  # Required inputs 
+  db_id                 = "1337"
+  # Pre-Built Modules  
+  location              = module.metadata.location
+  names                 = module.metadata.names
+  tags                  = module.metadata.tags
+  resource_group_name   = module.resource_group.name
+}
+```
+
+## Argument Reference
+
+The following arguments are supported.
+
+- **location**          - (Required) The location of where the redis cache is being deployed.
+- **subscription_name** - (Required) The azure subscription in which the mysql server will be deployed.
+- **app_name**          - (Required) The app name for database this will be associated with.
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:-----:|
+| subscription_name | Name of Azure Subscription | `string` | n/a | yes |
+| app_name | Server Name for Azure database for MySQL | `string` | n/a | yes |
+| sku_name | Azure database for MySQL sku name | `string` | `"GP_Gen5_2"` | no |
+| sku_size_mb | Azure database for MySQL Sku Size| `string` | `"10240"` | yes |
+| sku_tier | Azure database for MySQL pricing tier | `string` | `"GeneralPurpose"` | yes |
+| sku_family | Azure database for MySQL sku family | `string` | `"Gen5"` | yes |
+| my_sql_version | MySQL version 5.7 or 8.0 | `string` | `"8.0"` | yes |
+| location | Location for all resources | `string` | n/a | yes |
+| ARM_TENANT_ID | Azure Tenant ID | `string` | `"00000000-0000-0000-0000-000000000000"` | yes |
+| ARM_SUBSCRIPTION_ID | Subscription ID where you would like to deploy the resources | `string` | `"00000000-0000-0000-0000-000000000000"` | yes |
+  
+
+## Quick start
+
+1.Install [Terraform](https://www.terraform.io/).
+2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest) 
+
+
+```
+export TF_VAR_subscription_id="11111111-2222-3333-4444-111111111111"
+export TF_VAR_tenant_id="11111111-2222-3333-4444-222222222222"
+```
+
+Open `terraform.tfvars`, fill in the name of your 'subscription name', 'location', and
+'app_name' to be used with this MySQL Database.
+
+Deploy the code:
+
+```
+terraform init
+terraform plan -out azure-mysql-01.tfplan
+terraform apply
+```
+
+
+
