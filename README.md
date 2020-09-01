@@ -67,16 +67,7 @@ module "mysql_server" {
   resource_group_name   = module.resource_group.name
 }
 ```
-
-## Argument Reference
-
-The following arguments are supported.
-
-- **location**          - (Required) The location of where the redis cache is being deployed.
-- **subscription_name** - (Required) The azure subscription in which the mysql server will be deployed.
-- **app_name**          - (Required) The app name for database this will be associated with.
-
-## Inputs
+## Required Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
@@ -94,8 +85,8 @@ The following arguments are supported.
 
 ## Quick start
 
-1.Install [Terraform](https://www.terraform.io/).`
-2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest) 
+#1.Install [Terraform](https://www.terraform.io/).
+#2.Sign into your [Azure Account](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest) 
 
 
 ```
