@@ -93,8 +93,10 @@ module "mysql_server" {
 ```
 # Login with the Azure CLI/bash terminal/powershell by running
 az login
+
 # Verify access by running
 az account show --output jsonc
+
 # confirm you are running required/pinned version of terraform
 terraform version
 ```
